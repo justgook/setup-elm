@@ -122,22 +122,16 @@ async function setupCompiler(version) {
 
         try {
             await exec.exec(`gunzip ${elmDownloadPath}`);
-            // elmCompiler = await tc.extractTar(elmDownloadPath, `${process.env.HOME}/elm`);
+            elmCompiler = `${process.env.HOME}/elm`;
+            await io.mv(elmDownloadPath.replace(`.gz`, ''), elmCompiler);
+            await exec.exec(`chmod +x ${elmCompiler}`);
+            await tc.cacheFile(elmCompiler, 'elm', `elm-${process.platform}`, version);
 
         } catch (error) {
             core.setFailed(error.message);
         }
-        // await exec.exec(`ls ${elmCompiler}`)
-        // await io.mv('path/to/file', 'path/to/dest');
-        //
-        // tc.cacheFile(elmCompilerPath, 'elm', `elm-${process.platform}`, version);
-        //
-        // await exec.exec(`chmod +x ${process.env.HOME}/elm`);
     }
-
-    // core.addPath(elmCompiler);
-
-
+    core.addPath(elmCompiler);
 }
 
 
