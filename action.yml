@@ -11,13 +11,13 @@ inputs:
     required: false
     default: '0.19.1'
   elm-home:
-    description: 'The per-user cache of package information lives at the directory specified in the ELM_HOME environment variable. If this environment variable is not set, it defaults to ~/.elm/ on UNIX systems and C:/Users/<user>/AppData/Roaming/elm on Windows.'
+    description: 'The per-user cache of package information lives at the directory specified in the ELM_HOME environment variable.'
     required: false
     default: ''
 
 outputs:
   elm-home:
-    description: '`ELM_HOME` is different for different OS.'
+    description: '`ELM_HOME` is different for different OS, action will set it, so yu can cache it'
 
 runs:
   using: 'node12'

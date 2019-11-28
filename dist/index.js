@@ -101,9 +101,17 @@ const core = __webpack_require__(179);
 const exec = __webpack_require__(50);
 const tc = __webpack_require__(511);
 const io = __webpack_require__(382);
+const ioUtil = __webpack_require__(731);
 
-async function setupCompiler(version) {
-    let elmCompiler = tc.find(`elm-${process.platform}`, version, 'x64');
+async function setupCompiler(version, elmHome) {
+    let elmCompiler = await io.which('elm', true);
+    elmHome = elmHome === '' ? (process.env.ELM_HOME || `${process.env.HOME}/elm_home`) : elmHome;
+    if (elmCompiler === '' && await ioUtil.exists(`${elmHome}/elm`)) {
+        elmCompiler = `${elmHome}/elm`;
+    }
+    if (elmCompiler === '') {
+        elmCompiler = tc.find(`elm-${process.platform}`, version, 'x64');
+    }
     if (elmCompiler === '') {
         core.info(`Downloading Elm ${version} for ${process.platform} ...`);
         let elmDownloadPath = '';
@@ -116,13 +124,14 @@ async function setupCompiler(version) {
         } else {
             core.setFailed(`There is no elm for "${process.platform}"`);
         }
-        await io.mv(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/,"/elm.gz"));
+
+        await io.mv(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
 
         console.log("elmCompilerPath", elmDownloadPath);
 
         try {
             await exec.exec(`gunzip ${elmDownloadPath}`);
-            elmCompiler = `${process.env.HOME}/elm`;
+            elmCompiler = `${elmHome}/elm`;
             await io.mv(elmDownloadPath.replace(`.gz`, ''), elmCompiler);
             await exec.exec(`chmod +x ${elmCompiler}`);
             await tc.cacheFile(elmCompiler, 'elm', `elm-${process.platform}`, version);
@@ -132,19 +141,12 @@ async function setupCompiler(version) {
         }
     }
     core.addPath(elmCompiler.replace(/elm$/, ''));
+    core.exportVariable('ELM_HOME', elmHome);
+    core.setOutput('elm-home', elmHome);
 }
 
+setupCompiler(core.getInput('elm-version'), core.getInput('elm-home'));
 
-async function setElmHome(elmHome) {
-    core.getInput('elm-home');
-    core.exportVariable('ELM_HOME', 'Val');
-}
-
-
-// setupCompiler('0.19.1')
-
-setupCompiler(core.getInput('elm-version'));
-// setElmHome(core.getInput('elm-home'))
 
 
 /***/ }),

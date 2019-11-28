@@ -17,8 +17,12 @@ jobs:
         uses: ./
         with:
           elm-version: 0.19.1
+
       - name: Elm setup (default version)
         uses: ./
+
+      - name: Elm Home folder
+        run: echo $ELM_HOME
 
       - run: |
           elm
