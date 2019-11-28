@@ -1,0 +1,24 @@
+{
+  "name": "elm-make",
+  "author": "Romāns Potašovs <justgook@gmail.com>",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justgook/elm-make.git"
+  },
+  "homepage": "https://github.com/justgook/elm-make#readme",
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "JavaScript",
+    "Elm"
+  ],
+  "dependencies": {
+    "@actions/core": "1.2.0",
+    "@actions/exec": "1.0.1",
+    "@actions/io": "1.0.1",
+    "@actions/tool-cache": "1.1.2"
+  }
+}

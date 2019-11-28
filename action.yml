@@ -1,0 +1,24 @@
+name: Elm Make
+description: validate / test / build elm application or package
+author: Romāns Potašovs
+branding:
+  icon: 'download'
+  color: 'green'
+
+inputs:
+  elm-version:
+    description: 'Version of Elm to use. E.g. 0.19.1'
+    required: false
+    default: '0.19.1'
+  elm-home:
+    description: 'The per-user cache of package information lives at the directory specified in the ELM_HOME environment variable. If this environment variable is not set, it defaults to ~/.elm/ on UNIX systems and C:/Users/<user>/AppData/Roaming/elm on Windows.'
+    required: false
+    default: ''
+
+outputs:
+  elm-home:
+    description: '`ELM_HOME` is different for different OS.'
+
+runs:
+  using: 'node12'
+  main: 'index.js'
