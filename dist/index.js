@@ -105,7 +105,7 @@ const io = __webpack_require__(382);
 async function setupCompiler(version) {
     let elmCompiler = tc.find(`elm-${process.platform}`, version, 'x64');
     if (elmCompiler === '') {
-        core.info(`Downloading Elm ${version} - ${process.platform} ...`);
+        core.info(`Downloading Elm ${version} for ${process.platform} ...`);
         let elmDownloadPath = '';
         if (process.platform === 'win32') {
             elmDownloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-windows-64-bit.gz`);
@@ -131,7 +131,7 @@ async function setupCompiler(version) {
             core.setFailed(error.message);
         }
     }
-    core.addPath(elmCompiler);
+    core.addPath(elmCompiler.replace(/elm$/, ''));
 }
 
 
