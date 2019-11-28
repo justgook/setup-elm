@@ -126,7 +126,9 @@ async function setupCompiler(version, elmHome) {
         }
 
         try {
-            await io.mv(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
+            // await io.mv(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
+            await ioUtil.rename(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
+
             await exec.exec(`gunzip ${elmDownloadPath}`);
             elmCompiler = `${elmHome}/elm`;
             await io.mv(elmDownloadPath.replace(`.gz`, ''), elmCompiler);
