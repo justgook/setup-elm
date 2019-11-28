@@ -121,8 +121,8 @@ async function setupCompiler(version) {
         console.log("elmCompilerPath", elmDowloadPath);
 
         try {
-            await exec.exec(`gunzip ${elmDowloadPath}`);
-            // elmCompiler = await tc.extractZip(elmCompilerPath, `${process.env.HOME}/elm`);
+            // await exec.exec(`gunzip ${elmDowloadPath}`);
+            elmCompiler = await tc.extractZip(elmDowloadPath, `${process.env.HOME}/elm`);
 
         } catch (error) {
             core.setFailed(error.message);
