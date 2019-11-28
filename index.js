@@ -17,15 +17,15 @@ async function setupCompiler(version) {
         } else {
             core.setFailed(`There is no elm for "${process.platform}"`);
         }
-
+        await io.mv(elmDowloadPath, `${elmDowloadPath}.gz`)
+        elmDowloadPath = `${elmDowloadPath}.gz`;
         console.log("elmCompilerPath", elmDowloadPath);
 
         try {
             await exec.exec(`gunzip ${elmDowloadPath}`);
             // elmCompiler = await tc.extractZip(elmCompilerPath, `${process.env.HOME}/elm`);
 
-        }
-        catch (error) {
+        } catch (error) {
             core.setFailed(error.message);
         }
         // await exec.exec(`ls ${elmCompiler}`)
@@ -40,8 +40,6 @@ async function setupCompiler(version) {
 
 
 }
-
-
 
 
 async function setElmHome(elmHome) {
