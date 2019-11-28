@@ -20,8 +20,14 @@ async function setupCompiler(version) {
 
         core.debug("elmCompilerPath", elmCompilerPath);
 
-        elmCompiler = await tc.extractTar(elmCompilerPath, `${process.env.HOME}/elm`);
-        await exec.exec(`ls ${elmCompiler}`)
+        try {
+            elmCompiler = await tc.extractTar(elmCompilerPath, `${process.env.HOME}/elm`);
+
+        }
+        catch (error) {
+            core.setFailed(error.message);
+        }
+        // await exec.exec(`ls ${elmCompiler}`)
         // await io.mv('path/to/file', 'path/to/dest');
         //
         // tc.cacheFile(elmCompilerPath, 'elm', `elm-${process.platform}`, version);
@@ -33,6 +39,9 @@ async function setupCompiler(version) {
 
 
 }
+
+
+
 
 async function setElmHome(elmHome) {
     core.getInput('elm-home');
