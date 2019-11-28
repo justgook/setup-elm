@@ -5,6 +5,9 @@ const io = require('@actions/io');
 const ioUtil = require('@actions/io/lib/io-util.js');
 
 async function setupCompiler(version, elmHome) {
+    if (process.platform === 'win32') {
+        return core.setFailed('not yet supported on current OS');
+    }
     let elmCompiler = await io.which('elm', false);
     elmHome = elmHome === '' ? (process.env.ELM_HOME || `${process.env.HOME}/elm_home`) : elmHome;
     if (elmCompiler === '' && await ioUtil.exists(`${elmHome}/elm`)) {
