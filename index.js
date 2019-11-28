@@ -5,7 +5,7 @@ const io = require('@actions/io');
 const ioUtil = require('@actions/io/lib/io-util.js');
 
 async function setupCompiler(version, elmHome) {
-    let elmCompiler = await io.which('elm', true);
+    let elmCompiler = await io.which('elm', false);
     elmHome = elmHome === '' ? (process.env.ELM_HOME || `${process.env.HOME}/elm_home`) : elmHome;
     if (elmCompiler === '' && await ioUtil.exists(`${elmHome}/elm`)) {
         elmCompiler = `${elmHome}/elm`;

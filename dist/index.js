@@ -104,7 +104,7 @@ const io = __webpack_require__(382);
 const ioUtil = __webpack_require__(731);
 
 async function setupCompiler(version, elmHome) {
-    let elmCompiler = await io.which('elm', true);
+    let elmCompiler = await io.which('elm', false);
     elmHome = elmHome === '' ? (process.env.ELM_HOME || `${process.env.HOME}/elm_home`) : elmHome;
     if (elmCompiler === '' && await ioUtil.exists(`${elmHome}/elm`)) {
         elmCompiler = `${elmHome}/elm`;
