@@ -23,7 +23,7 @@ async function setupCompiler(version) {
 
         try {
             // await exec.exec(`gunzip ${elmDowloadPath}`);
-            elmCompiler = await tc.extractZip(elmDowloadPath, `${process.env.HOME}/elm`);
+            elmCompiler = await tc.extractTar(elmDowloadPath, `${process.env.HOME}/elm`);
 
         } catch (error) {
             core.setFailed(error.message);
