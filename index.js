@@ -17,7 +17,10 @@ async function setupCompiler(version) {
         } else {
             core.setFailed(`There is no elm for "${process.platform}"`);
         }
-        elmCompiler = await tc.extractZip(elmCompilerPath, `${process.env.HOME}/elm`);
+
+        core.debug("elmCompilerPath", elmCompilerPath);
+
+        elmCompiler = await tc.extractTar(elmCompilerPath, `${process.env.HOME}/elm`);
         await exec.exec(`ls ${elmCompiler}`)
         // await io.mv('path/to/file', 'path/to/dest');
         //

@@ -12,8 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - run: npm ci
-      - uses: ./
+#      - run: npm ci
+      - name: Elm setup
+        uses: ./
         with:
           elm-version: 0.19.1
       - run: |
