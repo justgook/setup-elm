@@ -106,21 +106,22 @@ async function setupCompiler(version) {
     let elmCompiler = tc.find(`elm-${process.platform}`, version, 'x64');
     if (elmCompiler === '') {
         core.info(`Downloading Elm ${version} - ${process.platform} ...`);
-        let elmCompilerPath = '';
+        let elmDowloadPath = '';
         if (process.platform === 'win32') {
-            elmCompilerPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-windows-64-bit.gz`);
+            elmDowloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-windows-64-bit.gz`);
         } else if (process.platform === 'linux') {
-            elmCompilerPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-linux-64-bit.gz`);
+            elmDowloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-linux-64-bit.gz`);
         } else if (process.platform === 'darwin') {
-            elmCompilerPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-mac-64-bit.gz`);
+            elmDowloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-mac-64-bit.gz`);
         } else {
             core.setFailed(`There is no elm for "${process.platform}"`);
         }
 
-        core.debug("elmCompilerPath", elmCompilerPath);
+        console.log("elmCompilerPath", elmDowloadPath);
 
         try {
-            elmCompiler = await tc.extractZip(elmCompilerPath, `${process.env.HOME}/elm`);
+            await exec.exec(`gunzip elmCompilerPath`);
+            // elmCompiler = await tc.extractZip(elmCompilerPath, `${process.env.HOME}/elm`);
 
         }
         catch (error) {
