@@ -129,7 +129,7 @@ async function setupCompiler(version, elmHome) {
             // await io.mv(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
             await ioUtil.rename(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
             if (process.platform === 'win32') {
-                await exec.exec(`gzip -d "${elmDownloadPath}"`);
+                await exec.exec(`gzip -df "${elmDownloadPath}"`);
             } else {
                 await exec.exec(`gunzip ${elmDownloadPath}`);
             }
