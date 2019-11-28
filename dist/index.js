@@ -106,23 +106,23 @@ async function setupCompiler(version) {
     let elmCompiler = tc.find(`elm-${process.platform}`, version, 'x64');
     if (elmCompiler === '') {
         core.info(`Downloading Elm ${version} - ${process.platform} ...`);
-        let elmDowloadPath = '';
+        let elmDownloadPath = '';
         if (process.platform === 'win32') {
-            elmDowloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-windows-64-bit.gz`);
+            elmDownloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-windows-64-bit.gz`);
         } else if (process.platform === 'linux') {
-            elmDowloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-linux-64-bit.gz`);
+            elmDownloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-linux-64-bit.gz`);
         } else if (process.platform === 'darwin') {
-            elmDowloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-mac-64-bit.gz`);
+            elmDownloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-mac-64-bit.gz`);
         } else {
             core.setFailed(`There is no elm for "${process.platform}"`);
         }
-        await io.mv(elmDowloadPath, `${elmDowloadPath}.gz`)
-        elmDowloadPath = `${elmDowloadPath}.gz`;
-        console.log("elmCompilerPath", elmDowloadPath);
+        await io.mv(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/,"/elm.gz"));
+
+        console.log("elmCompilerPath", elmDownloadPath);
 
         try {
-            // await exec.exec(`gunzip ${elmDowloadPath}`);
-            elmCompiler = await tc.extractTar(elmDowloadPath, `${process.env.HOME}/elm`);
+            await exec.exec(`gunzip ${elmDownloadPath}`);
+            // elmCompiler = await tc.extractTar(elmDownloadPath, `${process.env.HOME}/elm`);
 
         } catch (error) {
             core.setFailed(error.message);
