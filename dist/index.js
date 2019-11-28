@@ -125,11 +125,8 @@ async function setupCompiler(version, elmHome) {
             core.setFailed(`There is no elm for "${process.platform}"`);
         }
 
-        await io.mv(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
-
-        console.log("elmCompilerPath", elmDownloadPath);
-
         try {
+            await io.mv(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
             await exec.exec(`gunzip ${elmDownloadPath}`);
             elmCompiler = `${elmHome}/elm`;
             await io.mv(elmDownloadPath.replace(`.gz`, ''), elmCompiler);
