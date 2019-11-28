@@ -120,7 +120,7 @@ async function setupCompiler(version) {
         core.debug("elmCompilerPath", elmCompilerPath);
 
         try {
-            elmCompiler = await tc.extractTar(elmCompilerPath, `${process.env.HOME}/elm`);
+            elmCompiler = await tc.extractZip(elmCompilerPath, `${process.env.HOME}/elm`);
 
         }
         catch (error) {
