@@ -17,5 +17,8 @@ jobs:
         uses: ./
         with:
           elm-version: 0.19.1
+      - name: Elm setup (default version)
+        uses: ./
+
       - run: |
           elm
