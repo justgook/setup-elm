@@ -18,7 +18,7 @@ export const restoreCached = (elmHome) => {
 };
 
 export const saveCached = () => {
-    core.info('Saving ELM modules');
+    core.info('Saving ELM packages');
     const elmCacheConfig = elmCacheConfig_(process.env.ELM_HOME);
     return cache.saveCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey);
 };
