@@ -4,10 +4,10 @@ const hasha = require('hasha');
 
 const platformAndArch = `${process.platform}-${process.arch}`;
 const elmCacheConfig_ = ((elmHome) => {
-    const elmHash = hasha.fromFileSync(`${elmHome}/${core.getInput('elm-version')}/packages/registry.dat`);
+    const elmHash = hasha.fromFileSync(`./elm.json`);
     const o = {
         inputPath: elmHome || "~/.elm",
-        restoreKeys: `elm_home-${platformAndArch}`
+        restoreKeys: `elm_home-${core.getInput('elm-version')}-${platformAndArch}`
     };
     o.primaryKey = o.restoreKeys + elmHash;
     return o
