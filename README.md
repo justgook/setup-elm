@@ -15,5 +15,5 @@ It allows you to use the `elm` command in your workflow.
 ## Example usage
 
     steps:
-    - uses: justgook/elm-setup@v1
+    - uses: justgook/setup-elm@v1
     - run: elm make src/Main.elm
