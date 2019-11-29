@@ -1,9 +1,6 @@
 name: Elm Make
 description: validate / test / build elm application or package
 author: Romāns Potašovs
-branding:
-  icon: 'download'
-  color: 'green'
 
 inputs:
   elm-version:
@@ -22,3 +19,9 @@ outputs:
 runs:
   using: 'node12'
   main: 'dist/index.js'
+  post: 'dist/post.js'
+  post-if: 'success()'
+
+branding:
+  icon: 'download'
+  color: 'green'

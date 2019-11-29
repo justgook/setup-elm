@@ -34,7 +34,7 @@ module.exports =
 /******/ 	// the startup function
 /******/ 	function startup() {
 /******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(56);
+/******/ 		return __webpack_require__(154);
 /******/ 	};
 /******/
 /******/ 	// run startup
@@ -231,96 +231,6 @@ class PersonalAccessTokenCredentialHandler {
     }
 }
 exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHandler;
-
-
-/***/ }),
-
-/***/ 56:
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
-
-const core = __webpack_require__(179);
-const exec = __webpack_require__(50);
-const tc = __webpack_require__(511);
-const io = __webpack_require__(382);
-const ioUtil = __webpack_require__(731);
-const { restoreCache, saveCache } = __webpack_require__(261);
-// const hasha = require('hasha');
-
-async function setupCompiler(version, elmHome) {
-    if (process.platform === 'win32') {
-        return core.setFailed('not yet supported on current OS');
-    }
-    let elmCompiler = await io.which('elm', false);
-    elmHome = elmHome === '' ? (process.env.ELM_HOME || `${process.env.HOME}/elm_home`) : elmHome;
-    if (elmCompiler === '' && await ioUtil.exists(`${elmHome}/elm`)) {
-        elmCompiler = `${elmHome}/elm`;
-    }
-    if (elmCompiler === '') {
-        elmCompiler = tc.find(`elm-${process.platform}`, version, 'x64');
-    }
-    if (elmCompiler === '') {
-        core.info(`Downloading Elm ${version} for ${process.platform} ...`);
-        let elmDownloadPath = '';
-        if (process.platform === 'win32') {
-            elmDownloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-windows-64-bit.gz`);
-        } else if (process.platform === 'linux') {
-            elmDownloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-linux-64-bit.gz`);
-        } else if (process.platform === 'darwin') {
-            elmDownloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-mac-64-bit.gz`);
-        } else {
-            core.setFailed(`There is no elm for "${process.platform}"`);
-        }
-
-        try {
-            // await io.mv(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
-            await ioUtil.rename(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
-            // if (process.platform === 'win32') {
-            //     await exec.exec(`gzip -df \"${elmDownloadPath}\"`);
-            // } else {
-            await exec.exec(`gunzip ${elmDownloadPath}`);
-
-
-            elmCompiler = `${elmHome}/elm`;
-            await io.mv(elmDownloadPath.replace(`.gz`, ''), elmCompiler);
-            await exec.exec(`chmod +x ${elmCompiler}`);
-            await tc.cacheFile(elmCompiler, 'elm', `elm-${process.platform}`, version);
-
-        } catch (error) {
-            core.setFailed(error.message);
-        }
-    }
-    core.addPath(elmCompiler.replace(/elm$/, ''));
-    core.exportVariable('ELM_HOME', elmHome);
-    core.setOutput('elm-home', elmHome);
-}
-
-
-// const elmJsonHash = hasha.fromFileSync('./elm.json');
-const platformAndArch = `${process.platform}-${process.arch}`;
-
-const elmCacheConfig = (() => {
-    const o = {
-        inputPath: elmHome,
-        restoreKeys: `elm_home-${platformAndArch}`
-    };
-    o.primaryKey = o.restoreKeys; //+ elmJsonHash;
-    return o
-})();
-
-const restoreCached = () => {
-    core.info('trying to restore cached ELM cache');
-    return restoreCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey, elmCacheConfig.restoreKeys);
-};
-
-const saveCached = () => {
-    core.info('saving ELM modules');
-    return saveCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey);
-};
-
-
-
-setupCompiler(core.getInput('elm-version'), core.getInput('elm-home'));
-
 
 
 /***/ }),
@@ -578,6 +488,41 @@ var ntlm_1 = __webpack_require__(294);
 exports.NtlmCredentialHandler = ntlm_1.NtlmCredentialHandler;
 var personalaccesstoken_1 = __webpack_require__(55);
 exports.PersonalAccessTokenCredentialHandler = personalaccesstoken_1.PersonalAccessTokenCredentialHandler;
+
+
+/***/ }),
+
+/***/ 154:
+/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+
+const core = __webpack_require__(179);
+const exec = __webpack_require__(50);
+const tc = __webpack_require__(511);
+const io = __webpack_require__(382);
+const ioUtil = __webpack_require__(731);
+const { restoreCache, saveCache } = __webpack_require__(261);
+
+
+const elmCacheConfig = (() => {
+    const o = {
+        inputPath: elmHome,
+        restoreKeys: `elm_home-${platformAndArch}`
+    };
+    o.primaryKey = o.restoreKeys; //+ elmJsonHash;
+    return o
+})();
+
+// const restoreCached = () => {
+//     core.info('trying to restore cached ELM cache');
+//     return restoreCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey, elmCacheConfig.restoreKeys);
+// };
+
+const saveCached = () => {
+    core.info('saving ELM modules');
+    return saveCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey);
+};
+
+saveCached();
 
 
 /***/ }),
@@ -1129,7 +1074,7 @@ class NtlmCredentialHandler {
             res.readBody().then(() => {
                 // It is critical that we have setImmediate here due to how connection requests are queued.
                 // If setImmediate is removed then the NTLM handshake will not work.
-                // setImmediate allows us to queue a second request on the same connection. If this second 
+                // setImmediate allows us to queue a second request on the same connection. If this second
                 // request is not queued on the connection when the first request finishes then node closes
                 // the connection. NTLM requires both requests to be on the same connection so we need this.
                 setImmediate(function () {
@@ -4850,7 +4795,7 @@ function bytesToUuid(buf, offset) {
   var i = offset || 0;
   var bth = byteToHex;
   // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
-  return ([bth[buf[i++]], bth[buf[i++]], 
+  return ([bth[buf[i++]], bth[buf[i++]],
 	bth[buf[i++]], bth[buf[i++]], '-',
 	bth[buf[i++]], bth[buf[i++]], '-',
 	bth[buf[i++]], bth[buf[i++]], '-',
@@ -6649,7 +6594,7 @@ class HttpClient {
             if (this._certConfig) {
                 // If using cert, need fs
                 fs = __webpack_require__(747);
-                // cache the cert content into memory, so we don't have to read it from disk every time 
+                // cache the cert content into memory, so we don't have to read it from disk every time
                 if (this._certConfig.caFile && fs.existsSync(this._certConfig.caFile)) {
                     this._ca = fs.readFileSync(this._certConfig.caFile, 'utf8');
                 }

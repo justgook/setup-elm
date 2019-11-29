@@ -19,6 +19,8 @@
     "@actions/core": "1.2.0",
     "@actions/exec": "1.0.1",
     "@actions/io": "1.0.1",
-    "@actions/tool-cache": "1.1.2"
+    "@actions/tool-cache": "1.1.2",
+    "cache": "github:cypress-io/github-actions-cache#pull/1/head",
+    "hasha": "5.1.0"
   }
 }
