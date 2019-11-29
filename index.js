@@ -13,6 +13,10 @@ async function setupCompiler(version, elmHome) {
         elmHome = elmHome === '' ? (process.env.ELM_HOME || `${process.env.HOME}/elm_home`) : elmHome;
         let elmCompiler = await io.which('elm', false);
 
+        if (elmCompiler === '') {
+            elmCompiler = tc.find(`elm-${process.platform}`, version, 'x64');
+        }
+
         if (elmCompiler === '' && await cache.restoreCached(elmHome)) {
             elmCompiler = `${elmHome}/elm`;
             // await exec.exec(`chmod +x ${elmCompiler}`);
@@ -20,9 +24,6 @@ async function setupCompiler(version, elmHome) {
             elmCompiler = `${elmHome}/elm`;
         }
 
-        if (elmCompiler === '') {
-            elmCompiler = tc.find(`elm-${process.platform}`, version, 'x64');
-        }
 
         if (elmCompiler === '') {
             core.info(`Downloading Elm ${version} for ${process.platform} ...`);
@@ -51,12 +52,12 @@ async function setupCompiler(version, elmHome) {
             await tc.cacheFile(elmCompiler, 'elm', `elm-${process.platform}`, version);
 
         }
+        core.addPath(elmCompiler.replace(/elm$/, ''));
+        core.exportVariable('ELM_HOME', elmHome);
+        core.setOutput('elm-home', elmHome);
     } catch (error) {
         core.setFailed(error.message);
     }
-    core.addPath(elmCompiler.replace(/elm$/, ''));
-    core.exportVariable('ELM_HOME', elmHome);
-    core.setOutput('elm-home', elmHome);
 }
 
 

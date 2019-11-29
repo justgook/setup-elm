@@ -13,7 +13,7 @@ const elmCacheConfig_ = ((elmHome) => {
 
 export const restoreCached = (elmHome) => {
     core.info('Trying to restore cached ELM cache');
-    const elmCacheConfig = elmCacheConfig_();
+    const elmCacheConfig = elmCacheConfig_(elmHome);
     return cache.restoreCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey, elmCacheConfig.restoreKeys);
 };
 
