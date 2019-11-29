@@ -1,5 +1,5 @@
-name: Elm Make
-description: validate / test / build elm application or package
+name: Elm Setup
+description: Build Elm application or package
 author: Romāns Potašovs
 
 inputs:
