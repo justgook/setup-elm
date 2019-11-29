@@ -1181,7 +1181,12 @@ const hasha = __webpack_require__(634);
 
 const platformAndArch = `${process.platform}-${process.arch}`;
 const elmCacheConfig_ = ((elmHome) => {
-    const elmHash = hasha.fromFileSync(`./elm.json`);
+    let elmHash = 'empty';
+        try {
+            elmHash = hasha.fromFileSync(`./elm.json`);
+        } catch (error) {
+            core.info(error.message);
+        }
     const o = {
         inputPath: elmHome || "~/.elm",
         restoreKeys: `elm_home-${core.getInput('elm-version')}-${platformAndArch}`
