@@ -3,16 +3,21 @@ const exec = require('@actions/exec');
 const tc = require('@actions/tool-cache');
 const io = require('@actions/io');
 const ioUtil = require('@actions/io/lib/io-util.js');
-const { restoreCache, saveCache } = require('cache/lib/index');
-// const hasha = require('hasha');
+const cache = require("./cache");
 
 async function setupCompiler(version, elmHome) {
     if (process.platform === 'win32') {
         return core.setFailed('not yet supported on current OS');
     }
-    let elmCompiler = await io.which('elm', false);
     elmHome = elmHome === '' ? (process.env.ELM_HOME || `${process.env.HOME}/elm_home`) : elmHome;
-    if (elmCompiler === '' && await ioUtil.exists(`${elmHome}/elm`)) {
+    if(await cache.restoreCached(elmHome)){
+        await exec.exec(`chmod +x ${elmCompiler}`);
+    }
+
+    let elmCompiler = await io.which('elm', false);
+
+
+    if (await ioUtil.exists(`${elmHome}/elm`)) {
         elmCompiler = `${elmHome}/elm`;
     }
     if (elmCompiler === '') {
@@ -53,29 +58,6 @@ async function setupCompiler(version, elmHome) {
     core.exportVariable('ELM_HOME', elmHome);
     core.setOutput('elm-home', elmHome);
 }
-
-
-// const elmJsonHash = hasha.fromFileSync('./elm.json');
-const platformAndArch = `${process.platform}-${process.arch}`;
-
-const elmCacheConfig = (() => {
-    const o = {
-        inputPath: elmHome,
-        restoreKeys: `elm_home-${platformAndArch}`
-    };
-    o.primaryKey = o.restoreKeys; //+ elmJsonHash;
-    return o
-})();
-
-const restoreCached = () => {
-    core.info('trying to restore cached ELM cache');
-    return restoreCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey, elmCacheConfig.restoreKeys);
-};
-
-const saveCached = () => {
-    core.info('saving ELM modules');
-    return saveCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey);
-};
 
 
 

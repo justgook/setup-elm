@@ -36,6 +36,8 @@ module.exports =
 /******/ 		// Load entry module and return exports
 /******/ 		return __webpack_require__(56);
 /******/ 	};
+/******/ 	// initialize runtime
+/******/ 	runtime(__webpack_require__);
 /******/
 /******/ 	// run startup
 /******/ 	return startup();
@@ -243,16 +245,21 @@ const exec = __webpack_require__(50);
 const tc = __webpack_require__(511);
 const io = __webpack_require__(382);
 const ioUtil = __webpack_require__(731);
-const { restoreCache, saveCache } = __webpack_require__(261);
-// const hasha = require('hasha');
+const cache = __webpack_require__(315);
 
 async function setupCompiler(version, elmHome) {
     if (process.platform === 'win32') {
         return core.setFailed('not yet supported on current OS');
     }
-    let elmCompiler = await io.which('elm', false);
     elmHome = elmHome === '' ? (process.env.ELM_HOME || `${process.env.HOME}/elm_home`) : elmHome;
-    if (elmCompiler === '' && await ioUtil.exists(`${elmHome}/elm`)) {
+    if(await cache.restoreCached(elmHome)){
+        await exec.exec(`chmod +x ${elmCompiler}`);
+    }
+
+    let elmCompiler = await io.which('elm', false);
+
+
+    if (await ioUtil.exists(`${elmHome}/elm`)) {
         elmCompiler = `${elmHome}/elm`;
     }
     if (elmCompiler === '') {
@@ -293,29 +300,6 @@ async function setupCompiler(version, elmHome) {
     core.exportVariable('ELM_HOME', elmHome);
     core.setOutput('elm-home', elmHome);
 }
-
-
-// const elmJsonHash = hasha.fromFileSync('./elm.json');
-const platformAndArch = `${process.platform}-${process.arch}`;
-
-const elmCacheConfig = (() => {
-    const o = {
-        inputPath: elmHome,
-        restoreKeys: `elm_home-${platformAndArch}`
-    };
-    o.primaryKey = o.restoreKeys; //+ elmJsonHash;
-    return o
-})();
-
-const restoreCached = () => {
-    core.info('trying to restore cached ELM cache');
-    return restoreCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey, elmCacheConfig.restoreKeys);
-};
-
-const saveCached = () => {
-    core.info('saving ELM modules');
-    return saveCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey);
-};
 
 
 
@@ -1178,6 +1162,43 @@ class NtlmCredentialHandler {
     }
 }
 exports.NtlmCredentialHandler = NtlmCredentialHandler;
+
+
+/***/ }),
+
+/***/ 315:
+/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restoreCached", function() { return restoreCached; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "saveCached", function() { return saveCached; });
+const core = __webpack_require__(179);
+const cache  = __webpack_require__(261);
+
+
+const elmCacheConfig_ = ((elmHome) => {
+    const o = {
+        inputPath: elmHome || "~/.elm",
+        restoreKeys: `elm_home-${platformAndArch}`
+    };
+    o.primaryKey = o.restoreKeys; //+ elmJsonHash;
+    return o
+});
+
+const restoreCached = (elmHome) => {
+    core.info('Trying to restore cached ELM cache');
+    const elmCacheConfig = elmCacheConfig_();
+    return cache.restoreCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey, elmCacheConfig.restoreKeys);
+};
+
+const saveCached = () => {
+    core.info('Saving ELM modules');
+    const elmCacheConfig = elmCacheConfig_(process.env.ELM_HOME);
+    return cache.saveCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey);
+};
+
+
 
 
 /***/ }),
@@ -7398,4 +7419,31 @@ exports.createType3Message = createType3Message;
 
 /***/ })
 
-/******/ });
+/******/ },
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ 	"use strict";
+/******/ 
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = function(exports) {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getter */
+/******/ 	!function() {
+/******/ 		// define getter function for harmony exports
+/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
+/******/ 		__webpack_require__.d = function(exports, name, getter) {
+/******/ 			if(!hasOwnProperty.call(exports, name)) {
+/******/ 				Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ }
+);

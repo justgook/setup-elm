@@ -11,6 +11,10 @@ inputs:
     description: 'The per-user cache of package information lives at the directory specified in the ELM_HOME environment variable.'
     required: false
     default: ''
+  cache:
+    description: 'Save ELM_HOME to cache'
+    required: false
+    default: true
 
 outputs:
   elm-home:
@@ -19,7 +23,7 @@ outputs:
 runs:
   using: 'node12'
   main: 'dist/index.js'
-  post: 'dist/post.js'
+  post: 'dist/save/post.js'
   post-if: 'success()'
 
 branding:
