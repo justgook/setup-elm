@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const cache  = require('cache/lib/index');
 
-
+const platformAndArch = `${process.platform}-${process.arch}`;
 const elmCacheConfig_ = ((elmHome) => {
     const o = {
         inputPath: elmHome || "~/.elm",

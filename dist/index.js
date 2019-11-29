@@ -251,34 +251,34 @@ async function setupCompiler(version, elmHome) {
     if (process.platform === 'win32') {
         return core.setFailed('not yet supported on current OS');
     }
-    elmHome = elmHome === '' ? (process.env.ELM_HOME || `${process.env.HOME}/elm_home`) : elmHome;
-    if(await cache.restoreCached(elmHome)){
-        await exec.exec(`chmod +x ${elmCompiler}`);
-    }
+    try {
+        elmHome = elmHome === '' ? (process.env.ELM_HOME || `${process.env.HOME}/elm_home`) : elmHome;
+        let elmCompiler = await io.which('elm', false);
 
-    let elmCompiler = await io.which('elm', false);
-
-
-    if (await ioUtil.exists(`${elmHome}/elm`)) {
-        elmCompiler = `${elmHome}/elm`;
-    }
-    if (elmCompiler === '') {
-        elmCompiler = tc.find(`elm-${process.platform}`, version, 'x64');
-    }
-    if (elmCompiler === '') {
-        core.info(`Downloading Elm ${version} for ${process.platform} ...`);
-        let elmDownloadPath = '';
-        if (process.platform === 'win32') {
-            elmDownloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-windows-64-bit.gz`);
-        } else if (process.platform === 'linux') {
-            elmDownloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-linux-64-bit.gz`);
-        } else if (process.platform === 'darwin') {
-            elmDownloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-mac-64-bit.gz`);
-        } else {
-            core.setFailed(`There is no elm for "${process.platform}"`);
+        if (elmCompiler === '' && await cache.restoreCached(elmHome)) {
+            elmCompiler = `${elmHome}/elm`;
+            // await exec.exec(`chmod +x ${elmCompiler}`);
+        } else if (await ioUtil.exists(`${elmHome}/elm`)) {
+            elmCompiler = `${elmHome}/elm`;
         }
 
-        try {
+        if (elmCompiler === '') {
+            elmCompiler = tc.find(`elm-${process.platform}`, version, 'x64');
+        }
+
+        if (elmCompiler === '') {
+            core.info(`Downloading Elm ${version} for ${process.platform} ...`);
+            let elmDownloadPath = '';
+            if (process.platform === 'win32') {
+                elmDownloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-windows-64-bit.gz`);
+            } else if (process.platform === 'linux') {
+                elmDownloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-linux-64-bit.gz`);
+            } else if (process.platform === 'darwin') {
+                elmDownloadPath = await tc.downloadTool(`https://github.com/elm/compiler/releases/download/${version}/binary-for-mac-64-bit.gz`);
+            } else {
+                core.setFailed(`There is no elm for "${process.platform}"`);
+            }
+
             // await io.mv(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
             await ioUtil.rename(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
             // if (process.platform === 'win32') {
@@ -292,15 +292,14 @@ async function setupCompiler(version, elmHome) {
             await exec.exec(`chmod +x ${elmCompiler}`);
             await tc.cacheFile(elmCompiler, 'elm', `elm-${process.platform}`, version);
 
-        } catch (error) {
-            core.setFailed(error.message);
         }
+    } catch (error) {
+        core.setFailed(error.message);
     }
     core.addPath(elmCompiler.replace(/elm$/, ''));
     core.exportVariable('ELM_HOME', elmHome);
     core.setOutput('elm-home', elmHome);
 }
-
 
 
 setupCompiler(core.getInput('elm-version'), core.getInput('elm-home'));
@@ -1176,7 +1175,7 @@ __webpack_require__.r(__webpack_exports__);
 const core = __webpack_require__(179);
 const cache  = __webpack_require__(261);
 
-
+const platformAndArch = `${process.platform}-${process.arch}`;
 const elmCacheConfig_ = ((elmHome) => {
     const o = {
         inputPath: elmHome || "~/.elm",
