@@ -1,13 +1,15 @@
 const core = require('@actions/core');
 const cache  = require('cache/lib/index');
+const hasha = require('hasha');
 
 const platformAndArch = `${process.platform}-${process.arch}`;
 const elmCacheConfig_ = ((elmHome) => {
+    const elmHash = hasha.fromFileSync(`${elmHome}/${core.getInput('elm-version')}/packages/registry.dat`);
     const o = {
         inputPath: elmHome || "~/.elm",
         restoreKeys: `elm_home-${platformAndArch}`
     };
-    o.primaryKey = o.restoreKeys; //+ elmJsonHash;
+    o.primaryKey = o.restoreKeys + elmHash;
     return o
 });
 
@@ -22,5 +24,3 @@ export const saveCached = () => {
     const elmCacheConfig = elmCacheConfig_(process.env.ELM_HOME);
     return cache.saveCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey);
 };
-
-
