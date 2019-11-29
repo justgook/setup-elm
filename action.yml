@@ -27,5 +27,5 @@ runs:
   post-if: 'success()'
 
 branding:
-  icon: 'download'
-  color: 'green'
+  icon: 'play-circle'
+  color: 'blue'
