@@ -259,8 +259,10 @@ async function setupCompiler(version, elmHome) {
             elmCompiler = tc.find(`elm-${process.platform}`, version, 'x64');
         }
 
-        if (elmCompiler === '' && await cache.restoreCached(elmHome)) {
-            elmCompiler = `${elmHome}/elm`;
+        if (elmCompiler === '' && core.getInput('cache')) {
+            if (await cache.restoreCached(elmHome)){
+                elmCompiler = `${elmHome}/elm`;
+            }
             // await exec.exec(`chmod +x ${elmCompiler}`);
         } else if (await ioUtil.exists(`${elmHome}/elm`)) {
             elmCompiler = `${elmHome}/elm`;

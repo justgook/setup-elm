@@ -498,7 +498,10 @@ exports.PersonalAccessTokenCredentialHandler = personalaccesstoken_1.PersonalAcc
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 const { saveCached } = __webpack_require__(315);
-saveCached();
+const core = __webpack_require__(179);
+if (core.getInput('cache')) {
+    saveCached();
+}
 
 
 /***/ }),

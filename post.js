@@ -1,2 +1,5 @@
 const { saveCached } = require("./cache");
-saveCached();
+const core = require('@actions/core');
+if (core.getInput('cache')) {
+    saveCached();
+}
