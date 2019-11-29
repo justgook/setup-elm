@@ -4,7 +4,7 @@ const hasha = require('hasha');
 
 const platformAndArch = `${process.platform}-${process.arch}`;
 const elmCacheConfig_ = ((elmHome) => {
-    let elmHash = 'empty';
+    let elmHash = 'no-elm-json';
         try {
             elmHash = hasha.fromFileSync(`./elm.json`);
         } catch (error) {
@@ -14,7 +14,7 @@ const elmCacheConfig_ = ((elmHome) => {
         inputPath: elmHome || "~/.elm",
         restoreKeys: `elm_home-${core.getInput('elm-version')}-${platformAndArch}`
     };
-    o.primaryKey = o.restoreKeys + elmHash;
+    o.primaryKey = o.restoreKeys + "-" + elmHash;
     return o
 });
 
