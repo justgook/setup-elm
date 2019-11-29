@@ -23,7 +23,7 @@ outputs:
 runs:
   using: 'node12'
   main: 'dist/index.js'
-  post: 'dist/save/post.js'
+  post: 'dist/save/index.js'
   post-if: 'success()'
 
 branding:
