@@ -3655,7 +3655,8 @@ const elmCacheConfig_ = ((elmHome) => {
         inputPath: elmHome || "~/.elm",
         restoreKeys: `elm_home-${core.getInput('elm-version')}-${platformAndArch}`
     };
-    o.primaryKey = [o.restoreKeys + "-" + elmHash];
+    o.primaryKey = o.restoreKeys + "-" + elmHash;
+    o.restoreKeys = [o.restoreKeys];
     return o
 });
 
