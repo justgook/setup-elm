@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const cache  = require('cache/lib/index');
+const cache = require('@actions/cache');
 const hasha = require('hasha');
 
 const platformAndArch = `${process.platform}-${process.arch}`;

@@ -21,7 +21,6 @@ async function setupCompiler(version, elmHome) {
             if (await cache.restoreCached(elmHome)){
                 elmCompiler = `${elmHome}/elm`;
             }
-            // await exec.exec(`chmod +x ${elmCompiler}`);
         } else if (await ioUtil.exists(`${elmHome}/elm`)) {
             elmCompiler = `${elmHome}/elm`;
         }
@@ -40,12 +39,12 @@ async function setupCompiler(version, elmHome) {
                 core.setFailed(`There is no elm for "${process.platform}"`);
             }
 
-            // await io.mv(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
             await ioUtil.rename(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
-            // if (process.platform === 'win32') {
-            //     await exec.exec(`gzip -df \"${elmDownloadPath}\"`);
-            // } else {
-            await exec.exec(`gunzip ${elmDownloadPath}`);
+            if (process.platform === 'win32') {
+                await exec.exec(`gzip -df \"${elmDownloadPath}\"`);
+            } else {
+                await exec.exec(`gunzip ${elmDownloadPath}`);
+            }
 
 
             elmCompiler = `${elmHome}/elm`;

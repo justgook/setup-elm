@@ -1,7 +1,7 @@
 {
   "name": "elm-make",
   "author": "Romāns Potašovs <justgook@gmail.com>",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "main": "index.js",
   "license": "BSD-3-Clause",
   "repository": {
@@ -16,11 +16,11 @@
     "Elm"
   ],
   "dependencies": {
-    "@actions/core": "1.2.0",
-    "@actions/exec": "1.0.1",
-    "@actions/io": "1.0.1",
-    "@actions/tool-cache": "1.1.2",
-    "cache": "github:cypress-io/github-actions-cache#pull/1/head",
-    "hasha": "5.1.0"
+    "@actions/cache": "0.2.1",
+    "@actions/core": "1.2.4",
+    "@actions/exec": "1.0.4",
+    "@actions/io": "1.0.2",
+    "@actions/tool-cache": "1.5.5",
+    "hasha": "5.2.0"
   }
 }
