@@ -15,14 +15,13 @@ const elmCacheConfig_ = ((elmHome) => {
         restoreKeys: `elm_home-${core.getInput('elm-version')}-${platformAndArch}`
     };
     o.primaryKey = o.restoreKeys + "-" + elmHash;
-    o.restoreKeys = [o.restoreKeys];
     return o
 });
 
 export const restoreCached = (elmHome) => {
     core.info('Trying to restore cached ELM cache');
     const elmCacheConfig = elmCacheConfig_(elmHome);
-    return cache.restoreCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey, elmCacheConfig.restoreKeys);
+    return cache.restoreCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey, [elmCacheConfig.restoreKeys]);
 };
 
 export const saveCached = () => {
