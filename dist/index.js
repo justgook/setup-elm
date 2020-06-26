@@ -3736,7 +3736,7 @@ const restoreCached = (elmHome) => {
     core.info('Trying to restore cached ELM cache');
     const elmCacheConfig = elmCacheConfig_(elmHome);
     console.log(elmCacheConfig);
-    return cache.restoreCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey, elmCacheConfig.restoreKeys);
+    return cache.restoreCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey, [elmCacheConfig.restoreKeys]);
 };
 
 const saveCached = () => {
