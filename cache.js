@@ -2,19 +2,19 @@ const core = require('@actions/core');
 const cache = require('@actions/cache');
 const hasha = require('hasha');
 
-const platformAndArch = `${process.platform}-${process.arch}`;
+const platformAndArch = `${process.platform}${process.arch}`;
 const elmCacheConfig_ = ((elmHome) => {
     let elmHash = 'no-elm-json';
-        try {
-            elmHash = hasha.fromFileSync(`./elm.json`);
-        } catch (error) {
-            core.info(error.message);
-        }
+    try {
+        elmHash = hasha.fromFileSync(`./elm.json`);
+    } catch (error) {
+        core.info(error.message);
+    }
     const o = {
         inputPath: elmHome || "~/.elm",
         restoreKeys: `elm_home-${core.getInput('elm-version')}-${platformAndArch}`
     };
-    o.primaryKey = o.restoreKeys + "-" + elmHash;
+    o.primaryKey = [o.restoreKeys + "-" + elmHash];
     return o
 });
 
