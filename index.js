@@ -52,7 +52,7 @@ async function setupCompiler(version, elmHome) {
             }
 
             elmCompiler = `${elmHome}/elm`;
-            await io.mv(elmDownloadPath.replace(`.gz`, ''), elmCompiler);
+            await exec.exec(`cp ${elmDownloadPath.replace('.gz', '')} ${elmCompiler}`);
             await exec.exec(`chmod +x ${elmCompiler}`);
             await tc.cacheFile(elmCompiler, 'elm', `elm-${process.platform}`, version);
 
