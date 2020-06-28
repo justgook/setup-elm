@@ -38,11 +38,14 @@ async function setupCompiler(version, elmHome) {
             } else {
                 core.setFailed(`There is no elm for "${process.platform}"`);
             }
+            const newPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz");
+            await ioUtil.rename(elmDownloadPath, newPath);
+            elmDownloadPath = newPath;
 
-            await ioUtil.rename(elmDownloadPath, elmDownloadPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz"));
             if (process.platform === 'win32') {
                 await exec.exec(`mv \"${elmDownloadPath}\" \"${elmDownloadPath}.gz\"`);
-                await exec.exec(`gzip -df \"${elmDownloadPath}.gz\"`);
+                elmDownloadPath = `${elmDownloadPath}.gz`
+                await exec.exec(`gzip -df \"${elmDownloadPath}\"`);
             } else {
                 await exec.exec(`gunzip ${elmDownloadPath}`);
             }
