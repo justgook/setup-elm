@@ -51,13 +51,12 @@ async function setupCompiler(version, elmHome) {
 
             if (process.platform === 'win32') {
                 await exec.exec(`gzip -df \"${elmDownloadPath}\"`);
-                if (await ioUtil.exists(`${elmHome}`)) {
-                    await exec.exec(`mkdir ${elmHome}`);
-                }
             } else {
                 await exec.exec(`gunzip ${elmDownloadPath}`);
             }
-
+            if (await ioUtil.exists(`${elmHome}`)) {
+                await exec.exec(`mkdir ${elmHome}`);
+            }
             elmCompiler = `${elmHome}/elm`;
             await exec.exec(`cp ${elmDownloadPath.replace('.gz', '')} ${elmCompiler}`);
             await exec.exec(`chmod +x ${elmCompiler}`);
