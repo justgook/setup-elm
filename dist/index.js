@@ -3736,13 +3736,13 @@ const restoreCached = (elmHome) => {
     core.info('Trying to restore cached ELM cache');
     const elmCacheConfig = elmCacheConfig_(elmHome);
     console.log(elmCacheConfig);
-    return cache.restoreCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey, [elmCacheConfig.restoreKeys]);
+    // return cache.restoreCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey, [elmCacheConfig.restoreKeys]);
 };
 
 const saveCached = () => {
     core.info('Saving ELM packages');
     const elmCacheConfig = elmCacheConfig_(process.env.ELM_HOME);
-    return cache.saveCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey);
+    // return cache.saveCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey);
 };
 
 
