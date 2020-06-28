@@ -38,22 +38,23 @@ async function setupCompiler(version, elmHome) {
             } else {
                 core.setFailed(`There is no elm for "${process.platform}"`);
             }
-            const newPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz");
+            // const newPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz");
             await ioUtil.rename(elmDownloadPath, newPath);
-            elmDownloadPath = newPath;
+            // elmDownloadPath = newPath;
 
-            console.log("Testing path", elmDownloadPath);
+
             if (process.platform === 'win32') {
                 await exec.exec(`mv \"${elmDownloadPath}\" \"${elmDownloadPath}.gz\"`);
                 elmDownloadPath = `${elmDownloadPath}.gz`
+                console.log("Testing path2", elmDownloadPath);
                 await exec.exec(`gzip -df \"${elmDownloadPath}\"`);
             } else {
                 await exec.exec(`gunzip ${elmDownloadPath}`);
             }
 
             elmCompiler = `${elmHome}/elm`;
-            await io.mv(elmDownloadPath.replace(`.gz`, ''), elmCompiler);
-            await exec.exec(`chmod +x ${elmCompiler}`);
+            // await io.mv(elmDownloadPath.replace(`.gz`, ''), elmCompiler);
+            // await exec.exec(`chmod +x ${elmCompiler}`);
             await tc.cacheFile(elmCompiler, 'elm', `elm-${process.platform}`, version);
 
         }
