@@ -6378,8 +6378,8 @@ if (core.getInput('cache')) {
         .then(function () {
             core.info('Cache Saved');
         })
-        .catch(function (e) {
-            console.log("AAA", e);
+        .catch(function (error) {
+            core.info(error.message);
         })
 }
 
