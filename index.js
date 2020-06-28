@@ -1,9 +1,10 @@
 const core = require('@actions/core');
+const cache = require('@actions/cache');
 const exec = require('@actions/exec');
 const tc = require('@actions/tool-cache');
 const io = require('@actions/io');
 const ioUtil = require('@actions/io/lib/io-util.js');
-const cache = require("./cache");
+const { getConfig } = require("./config");
 
 async function setupCompiler(version, elmHome) {
     try {
@@ -13,15 +14,18 @@ async function setupCompiler(version, elmHome) {
 
         let elmCompiler = await io.which('elm', false);
 
+        if (core.getInput('cache')) {
+            core.info('Trying to restore cached ELM config');
+            const { paths, key, restoreKeys } = getConfig(elmHome);
+            await cache.restoreCache(paths, key, restoreKeys)
+        }
+
         if (elmCompiler === '') {
             elmCompiler = tc.find(`elm-${process.platform}`, version, 'x64');
         }
 
-        if (elmCompiler === '' && core.getInput('cache')) {
-            if (await cache.restoreCached(elmHome)) {
-                elmCompiler = `${elmHome}/elm`;
-            }
-        } else if (await ioUtil.exists(`${elmHome}/elm`)) {
+
+        if (await ioUtil.exists(`${elmHome}/elm`)) {
             elmCompiler = `${elmHome}/elm`;
         }
 
@@ -47,7 +51,9 @@ async function setupCompiler(version, elmHome) {
 
             if (process.platform === 'win32') {
                 await exec.exec(`gzip -df \"${elmDownloadPath}\"`);
-                await exec.exec(`mkdir ${elmHome}`);
+                if (await ioUtil.exists(`${elmHome}`)) {
+                    await exec.exec(`mkdir ${elmHome}`);
+                }
             } else {
                 await exec.exec(`gunzip ${elmDownloadPath}`);
             }

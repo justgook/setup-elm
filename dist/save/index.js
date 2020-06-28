@@ -3632,49 +3632,6 @@ exports.getState = getState;
 
 /***/ }),
 
-/***/ 341:
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restoreCached", function() { return restoreCached; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "saveCached", function() { return saveCached; });
-const core = __webpack_require__(310);
-const cache = __webpack_require__(715);
-const hasha = __webpack_require__(928);
-
-const platformAndArch = `${process.platform}${process.arch}`;
-const elmCacheConfig_ = ((elmHome) => {
-    let elmHash = 'no-elm-json';
-    try {
-        elmHash = hasha.fromFileSync(`./elm.json`);
-    } catch (error) {
-        core.info(error.message);
-    }
-    const o = {
-        inputPath: elmHome || "~/.elm",
-        restoreKeys: `elm_home-${core.getInput('elm-version')}-${platformAndArch}`
-    };
-    o.primaryKey = o.restoreKeys + "-" + elmHash;
-    return o
-});
-
-const restoreCached = (elmHome) => {
-    core.info('Trying to restore cached ELM cache');
-    const elmCacheConfig = elmCacheConfig_(elmHome);
-    console.log(elmCacheConfig);
-    // return cache.restoreCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey, [elmCacheConfig.restoreKeys]);
-};
-
-const saveCached = () => {
-    core.info('Saving ELM packages');
-    const elmCacheConfig = elmCacheConfig_(process.env.ELM_HOME);
-    // return cache.saveCache(elmCacheConfig.inputPath, elmCacheConfig.primaryKey);
-};
-
-
-/***/ }),
-
 /***/ 351:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -6410,10 +6367,14 @@ function range(a, b, str) {
 /***/ 792:
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
-const { saveCached } = __webpack_require__(341);
 const core = __webpack_require__(310);
+const cache = __webpack_require__(715);
+const { getConfig } = __webpack_require__(872);
+
 if (core.getInput('cache')) {
-    saveCached();
+    core.info('Saving ELM packages');
+    const {paths, key} = getConfig(process.env.ELM_HOME);
+    cache.saveCache(paths, key);
 }
 
 
@@ -6455,6 +6416,32 @@ exports.create = create;
 /***/ (function(module) {
 
 module.exports = require("url");
+
+/***/ }),
+
+/***/ 872:
+/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getConfig", function() { return getConfig; });
+const core = __webpack_require__(310);
+const hasha = __webpack_require__(928);
+const platformAndArch = `${process.platform}${process.arch}`;
+
+function getConfig(elmHome) {
+    let elmHash = 'no-elm-json';
+    try {
+        elmHash = hasha.fromFileSync(`./elm.json`);
+    } catch (error) {
+        core.info(error.message);
+    }
+    const restoreKey = `elm_home-${core.getInput('elm-version')}-${platformAndArch}`;
+    const path = elmHome || "~/.elm";
+    const key = restoreKey + "-" + elmHash;
+    return { key: key, paths: [path], restoreKeys: [restoreKey] };
+}
+
 
 /***/ }),
 
