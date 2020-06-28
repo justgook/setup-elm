@@ -371,6 +371,7 @@ async function setupCompiler(version, elmHome) {
             await ioUtil.rename(elmDownloadPath, newPath);
             elmDownloadPath = newPath;
 
+            console.log("Testing path", elmDownloadPath);
             if (process.platform === 'win32') {
                 await exec.exec(`mv \"${elmDownloadPath}\" \"${elmDownloadPath}.gz\"`);
                 elmDownloadPath = `${elmDownloadPath}.gz`
