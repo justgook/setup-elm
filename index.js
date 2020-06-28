@@ -54,7 +54,7 @@ async function setupCompiler(version, elmHome) {
             } else {
                 await exec.exec(`gunzip ${elmDownloadPath}`);
             }
-            if (await ioUtil.exists(`${elmHome}`)) {
+            if (!await ioUtil.isDirectory(`${elmHome}`)) {
                 await exec.exec(`mkdir ${elmHome}`);
             }
             elmCompiler = `${elmHome}/elm`;
