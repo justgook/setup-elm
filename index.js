@@ -39,7 +39,7 @@ async function setupCompiler(version, elmHome) {
                 core.setFailed(`There is no elm for "${process.platform}"`);
             }
             // const newPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz");
-            await ioUtil.rename(elmDownloadPath, newPath);
+            // await ioUtil.rename(elmDownloadPath, newPath);
             // elmDownloadPath = newPath;
 
 
