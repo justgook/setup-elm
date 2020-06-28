@@ -46,7 +46,8 @@ async function setupCompiler(version, elmHome) {
             if (process.platform === 'win32') {
                 await exec.exec(`mv \"${elmDownloadPath}\" \"${elmDownloadPath}.gz\"`);
                 elmDownloadPath = `${elmDownloadPath}.gz`
-                console.log("Testing path2", elmDownloadPath);
+                const newPath = elmDownloadPath.replace(/\\[^\\]+$/, "/elm.gz");
+                console.log("Testing new Path", newPath);
                 await exec.exec(`gzip -df \"${elmDownloadPath}\"`);
             } else {
                 await exec.exec(`gunzip ${elmDownloadPath}`);
