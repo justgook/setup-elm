@@ -6,9 +6,9 @@ const ioUtil = require('@actions/io/lib/io-util.js');
 const cache = require("./cache");
 
 async function setupCompiler(version, elmHome) {
-    if (process.platform === 'win32') {
-        return core.setFailed('not yet supported on current OS');
-    }
+    // if (process.platform === 'win32') {
+    //     return core.setFailed('not yet supported on current OS');
+    // }
     try {
         elmHome = elmHome === '' ? (process.env.ELM_HOME || `${process.env.HOME}/elm_home`) : elmHome;
         let elmCompiler = await io.which('elm', false);

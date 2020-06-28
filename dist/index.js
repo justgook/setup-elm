@@ -335,9 +335,9 @@ const ioUtil = __webpack_require__(223);
 const cache = __webpack_require__(341);
 
 async function setupCompiler(version, elmHome) {
-    if (process.platform === 'win32') {
-        return core.setFailed('not yet supported on current OS');
-    }
+    // if (process.platform === 'win32') {
+    //     return core.setFailed('not yet supported on current OS');
+    // }
     try {
         elmHome = elmHome === '' ? (process.env.ELM_HOME || `${process.env.HOME}/elm_home`) : elmHome;
         let elmCompiler = await io.which('elm', false);
