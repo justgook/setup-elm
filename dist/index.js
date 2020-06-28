@@ -367,24 +367,22 @@ async function setupCompiler(version, elmHome) {
             } else {
                 core.setFailed(`There is no elm for "${process.platform}"`);
             }
-            // const newPath = elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz");
-            // await ioUtil.rename(elmDownloadPath, newPath);
-            // elmDownloadPath = newPath;
-
-
+            const newPath =
+                process.platform === 'win32'
+                    ? elmDownloadPath.replace(/\\[^\\]+$/, "\\elm.gz")
+                    : elmDownloadPath.replace(/\/[^\/]+$/, "/elm.gz");
+            await ioUtil.rename(elmDownloadPath, newPath);
+            elmDownloadPath = newPath;
+            
             if (process.platform === 'win32') {
-                await exec.exec(`mv \"${elmDownloadPath}\" \"${elmDownloadPath}.gz\"`);
-                elmDownloadPath = `${elmDownloadPath}.gz`
-                const newPath = elmDownloadPath.replace(/\\[^\\]+$/, "/elm.gz");
-                console.log("Testing new Path", newPath);
                 await exec.exec(`gzip -df \"${elmDownloadPath}\"`);
             } else {
                 await exec.exec(`gunzip ${elmDownloadPath}`);
             }
 
             elmCompiler = `${elmHome}/elm`;
-            // await io.mv(elmDownloadPath.replace(`.gz`, ''), elmCompiler);
-            // await exec.exec(`chmod +x ${elmCompiler}`);
+            await io.mv(elmDownloadPath.replace(`.gz`, ''), elmCompiler);
+            await exec.exec(`chmod +x ${elmCompiler}`);
             await tc.cacheFile(elmCompiler, 'elm', `elm-${process.platform}`, version);
 
         }
