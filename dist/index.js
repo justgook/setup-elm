@@ -7182,14 +7182,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getConfig", function() { return getConfig; });
 const core = __webpack_require__(310);
 const hasha = __webpack_require__(928);
+const ioUtil = __webpack_require__(223);
 const platformAndArch = `${process.platform}${process.arch}`;
 
 function getConfig(elmHome) {
     let elmHash = 'no-elm-json';
-    try {
+    if (ioUtil.exists(`./elm.json`)) {
         elmHash = hasha.fromFileSync(`./elm.json`);
-    } catch (error) {
-        core.info(error.message);
     }
     const restoreKey = `elm_home-${core.getInput('elm-version')}-${platformAndArch}`;
     const path = elmHome || "~/.elm";
