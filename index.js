@@ -47,6 +47,7 @@ async function setupCompiler(version, elmHome) {
 
             if (process.platform === 'win32') {
                 await exec.exec(`gzip -df \"${elmDownloadPath}\"`);
+                await exec.exec(`mkdir ${elmHome}`);
             } else {
                 await exec.exec(`gunzip ${elmDownloadPath}`);
             }
