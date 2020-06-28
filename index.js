@@ -6,11 +6,11 @@ const ioUtil = require('@actions/io/lib/io-util.js');
 const cache = require("./cache");
 
 async function setupCompiler(version, elmHome) {
-    // if (process.platform === 'win32') {
-    //     return core.setFailed('not yet supported on current OS');
-    // }
     try {
-        elmHome = elmHome === '' ? (process.env.ELM_HOME || `${process.env.HOME}/elm_home`) : elmHome;
+        elmHome = elmHome === ''
+            ? (process.env.ELM_HOME || `${process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME']}/elm_home`)
+            : elmHome;
+
         let elmCompiler = await io.which('elm', false);
 
         if (elmCompiler === '') {
@@ -18,7 +18,7 @@ async function setupCompiler(version, elmHome) {
         }
 
         if (elmCompiler === '' && core.getInput('cache')) {
-            if (await cache.restoreCached(elmHome)){
+            if (await cache.restoreCached(elmHome)) {
                 elmCompiler = `${elmHome}/elm`;
             }
         } else if (await ioUtil.exists(`${elmHome}/elm`)) {
@@ -46,7 +46,6 @@ async function setupCompiler(version, elmHome) {
             } else {
                 await exec.exec(`gunzip ${elmDownloadPath}`);
             }
-
 
             elmCompiler = `${elmHome}/elm`;
             await io.mv(elmDownloadPath.replace(`.gz`, ''), elmCompiler);
