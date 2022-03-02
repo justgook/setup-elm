@@ -17,8 +17,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-        with:
-          cahce: false
 
       - name: Elm setup
         uses: ./
