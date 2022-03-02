@@ -3454,7 +3454,7 @@ var ExitCode;
 function exportVariable(name, val) {
     const convertedVal = command_1.toCommandValue(val);
     process.env[name] = convertedVal;
-    command_1.issueCommand('set-env', { name }, convertedVal);
+    command_1.issueCommand('exportVariable', { name }, convertedVal);
 }
 exports.exportVariable = exportVariable;
 /**
@@ -3470,7 +3470,7 @@ exports.setSecret = setSecret;
  * @param inputPath
  */
 function addPath(inputPath) {
-    command_1.issueCommand('add-path', {}, inputPath);
+    command_1.issueCommand('addPath', {}, inputPath);
     process.env['PATH'] = `${inputPath}${path.delimiter}${process.env['PATH']}`;
 }
 exports.addPath = addPath;
@@ -7511,7 +7511,7 @@ const os = __importStar(__webpack_require__(87));
  *
  * Examples:
  *   ::warning::This is the message
- *   ::set-env name=MY_VAR::some value
+ *   ::exportVariable name=MY_VAR::some value
  */
 function issueCommand(command, properties, message) {
     const cmd = new Command(command, properties, message);
